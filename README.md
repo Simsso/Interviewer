@@ -6,3 +6,16 @@ For example a user might want to track body height, look of their face, or what 
 Previous entries can be retrieved and edited retrospectively.
 
 The app is currently being developed.
+
+## Setup
+Wit git, [Node.js](https://nodejs.org/), and npm installed, execute the commands
+```bash
+git clone https://github.com/Simsso/Interviewer`
+cd Interviewer
+npm install
+mv .env-sample .env
+```
+in order to install the service on Linux or Mac. Open the .env file which is located in the project root and adjust all values depending on the environment. Subsequently, start the service with
+```bash
+npm start
+```

@@ -31,4 +31,4 @@ module.exports = (() => {
         getTokenPayload: getTokenPayload,
         getInterviews: getInterviews
     }
-})();
+})()

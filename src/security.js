@@ -8,7 +8,7 @@ module.exports = (() => {
      * @returns {string} JWT token.
      */
     function generateToken(data, expires) {
-        return jwt.sign({ data: data }, process.env.TOKEN_SECRET, { expiresIn: expires });
+        return jwt.sign({ data: data }, process.env.TOKEN_SECRET, { expiresIn: expires })
     }
 
     /**
@@ -44,4 +44,4 @@ module.exports = (() => {
         generateToken: generateToken,
         authMiddleware: authMiddleware
     }
-})();
+})()

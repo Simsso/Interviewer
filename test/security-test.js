@@ -77,7 +77,7 @@ describe('security', () => {
             fn(mock.req, mock.res, mock.next)
             assert.equal(typeof mock.getSentStatus(), 'undefined', 'Should not send response for valid tokens.')
             assert.equal(mock.getNextCount(), 1, 'Next must be called exactly once.')
-            done();
+            done()
         })
     })
 })

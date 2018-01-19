@@ -1,6 +1,6 @@
 module.exports = (() => {
-    const Ajv = require('ajv');
-    const ajv = new Ajv();
+    const Ajv = require('ajv')
+    const ajv = new Ajv()
 
     const security = require('../security')
 
@@ -9,7 +9,7 @@ module.exports = (() => {
      * @param {string[]} routes Name of the routes to register. Each route name is the file name of the module that exports an express Route object.
      */
     function registerRoutes(app, routes) {
-        const apiPrefix = '/api/v1';
+        const apiPrefix = '/api/v1'
         for (let route of routes) {
             app.use(apiPrefix, require('./' + route))
         }
@@ -21,7 +21,7 @@ module.exports = (() => {
      * @returns {object} Object of validation functions where the keys correspond to the passed strings.
      */
     function loadSchemas(schemaNames) {
-        const schemaValidators = {};
+        const schemaValidators = {}
         for (let i in schemaNames) {
             const schemaName = schemaNames[i]
             schemaValidators[schemaName] = ajv.compile(require('./schema/' + schemaName + '.json'))

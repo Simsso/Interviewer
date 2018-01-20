@@ -1,10 +1,17 @@
-const router = require('express').Router()
-const routeUtil = require('./route-util')
-const validate = routeUtil.loadSchemas(['user'])
+module.exports = (db, security) => {
+    const router = require('express').Router()
+    const routeUtil = require('./route-util')
+    const validate = routeUtil.loadSchemas(['user'])
 
-router.post('/users', (req, res) => {
-    validate['user'](req.body)
-    res.json(validate['user'].errors)
-})
+    function users(req, res) {
+        validate['user'](req.body)
+        res.json(validate['user'].errors)
+    }
 
-module.exports = router
+    router.post('/users', security.authMiddleware(), users)
+
+    return {
+        router: router,
+        users: users
+    }
+}

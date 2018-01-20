@@ -15,7 +15,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // register API endpoints
-require('./api/route-util').registerRoutes(app, ['status', 'authenticate', 'users', 'interviews'])
+const db = require('./db')
+const security = require('./security')
+require('./api/route-util').registerRoutes(app, ['status', 'authenticate', 'users'], db, security)
 
 // start listening
 const port = process.env.PORT

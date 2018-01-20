@@ -1,7 +1,14 @@
-const router = require('express').Router()
+module.exports = () => {
+    const router = require('express').Router()
 
-router.get('/status', (req, res) => {
-    res.json({ status: 'online' })
-})
+    function status(req, res) {
+        res.json({ message: 'Running' })
+    }
 
-module.exports = router
+    router.get('/status', status)
+
+    return {
+        router: router,
+        status: status
+    }
+}

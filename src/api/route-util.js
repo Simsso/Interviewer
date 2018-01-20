@@ -8,10 +8,10 @@ module.exports = (() => {
      * @param {Express} app Express app
      * @param {string[]} routes Name of the routes to register. Each route name is the file name of the module that exports an express Route object.
      */
-    function registerRoutes(app, routes) {
+    function registerRoutes(app, routes, db, security) {
         const apiPrefix = '/api/v1'
         for (let route of routes) {
-            app.use(apiPrefix, require('./' + route))
+            app.use(apiPrefix, require('./' + route)(db, security).router)
         }
     }
 

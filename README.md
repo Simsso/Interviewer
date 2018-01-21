@@ -6,3 +6,8 @@ For example a user might want to track body height, look of their face, or what 
 Previous entries can be retrieved and edited retrospectively.
 
 The app is currently being developed.
+
+## System Architecture
+This project contains the Interviewer core API service which is a Node.js application. Furthermore, all database access is included as well as database setup scripts. Both components are highlighted in the figure below.
+
+![System architecture visualization](documentation/system-architecture.png)

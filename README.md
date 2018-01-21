@@ -19,3 +19,11 @@ in order to install the service on Linux or Mac. Open the .env file which is loc
 ```bash
 npm start
 ```
+
+## System Architecture
+This project contains the Interviewer core API service which is a Node.js application. Furthermore, all database access is included as well as database setup scripts. Both components are highlighted in the figure below.
+
+![System architecture visualization](documentation/system-architecture.png)
+
+## Database
+![Entity relationship model](documentation/entity-relationship-model.png)

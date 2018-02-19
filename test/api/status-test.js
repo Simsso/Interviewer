@@ -5,9 +5,9 @@ const httpMocks = require('node-mocks-http')
 const src = '../../src/api/'
 
 
-describe('api', () => {
+describe('Status API', () => {
     const statusHandler = require(src + 'routes/status')().status
-    describe('/status', () => {
+    describe('GET /status', () => {
         it('responds with 200 OK', () => {
             const req = httpMocks.createRequest(), res = httpMocks.createResponse(), next = sinon.spy()
             statusHandler(req, res, next)

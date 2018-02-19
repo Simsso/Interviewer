@@ -1,24 +1,25 @@
 {
     "title": "User",
     "type": "object",
-    "description": "A Interviewer user.",
+    "description": "An Interviewer user.",
     "properties": {
-        "firstName": {
-            "type": "string"
-        },
-        "lastName": {
-            "type": "string"
+        "username": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Username of the user.",
+            "pattern": "^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$"
         },
         "email": {
             "type": "string",
             "minLength": 5,
-            "description": "Email address of a user."
+            "description": "Email address of the user.",
+            "pattern": "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$"
         },
         "password": {
             "type": "string",
             "minLength": 4,
-            "description": "Plain text password of a user."
+            "description": "Plain text password of the user."
         }
     },
-    "required": ["email", "password"]
+    "required": ["username", "email", "password"]
 }

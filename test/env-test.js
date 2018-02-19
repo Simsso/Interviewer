@@ -2,7 +2,7 @@ require('dotenv').config() // load env variables
 const assert = require('assert')
 
 
-describe('environment variables', () => {
+describe('Environment variables', () => {
     function itIsDefined(envVariable) {
         it('is defined', () => {
             assert.equal(typeof process.env[envVariable], 'string')

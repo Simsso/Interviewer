@@ -1,5 +1,10 @@
 module.exports = (() => {
     const jwt = require('jsonwebtoken')
+    const routeUtil = require('./api/util/route-util')
+
+    function getValidationFunctions() {
+        return routeUtil.loadSchemas(['user'])
+    }
 
     /**
      * Generate a new JWT token with the given data.
@@ -42,6 +47,7 @@ module.exports = (() => {
 
     return {
         generateToken: generateToken,
-        authMiddleware: authMiddleware
+        authMiddleware: authMiddleware,
+        validate: getValidationFunctions
     }
 })()

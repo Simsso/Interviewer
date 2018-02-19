@@ -1,17 +1,30 @@
 module.exports = (db, security) => {
     const router = require('express').Router()
-    const routeUtil = require('../util/route-util')
-    const validate = routeUtil.loadSchemas(['user'])
+    const validate = security.validate()
 
-    function users(req, res) {
-        validate['user'](req.body)
-        res.json(validate['user'].errors)
+    async function addUser(req, res) {
+        const user = req.body
+        const valid = validate['user'](req.body)
+        if (!valid) {
+            const errors = validate['user'].errors
+            return res.status(400).json({ 
+                message: 'Invalid user object passed',
+                errors: errors
+            })
+        }
+        try {
+            const createdUser = await db.addUser(user)
+            return res.status(201).json(createdUser)
+        }
+        catch(e) {
+            return res.status(500).json({ message: 'User could not be added to the database because of an internal error' })
+        }
     }
 
-    router.post('/users', security.authMiddleware(), users)
+    router.post('/users', addUser)
 
     return {
         router: router,
-        users: users
+        addUser: addUser
     }
 }

@@ -8,7 +8,7 @@ module.exports = (() => {
         return user && password
         // TODO: implement authentication
     }
-
+    
     /**
      * @param {string} user Username.
      * @returns {object} Token payload
@@ -18,17 +18,8 @@ module.exports = (() => {
         // TODO: read relevant information from db
     }
 
-    /**
-     * @param {string} user Username.
-     */
-    function getInterviews(user) {
-        return ['test1', 'question2', 'blabla3']
-        // TODO: implement
-    }
-
     return {
         validCredentials: validCredentials,
-        getTokenPayload: getTokenPayload,
-        getInterviews: getInterviews
+        getTokenPayload: getTokenPayload
     }
 })()

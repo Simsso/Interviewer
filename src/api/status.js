@@ -2,7 +2,7 @@ module.exports = () => {
     const router = require('express').Router()
 
     function status(req, res) {
-        res.json({ message: 'Running' })
+        res.status(200).json({ message: 'Online' })
     }
 
     router.get('/status', status)

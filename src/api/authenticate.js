@@ -5,7 +5,10 @@ module.exports = (db, security) => {
     function authenticate(req, res) {
         const credentials = basicAuth.parse(req.get('authorization'))
     
-        if (typeof credentials === 'undefined') return res.status(400).json({ message: 'Authentication header with Basic auth required' })
+        if (typeof credentials === 'undefined') {
+            return res.status(400).json({ message: 'Authentication header with Basic auth required' })
+        }
+        
         const userName = credentials.name
     
         if (!db.validCredentials(userName, credentials.pass)) {

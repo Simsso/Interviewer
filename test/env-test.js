@@ -1,6 +1,5 @@
 require('dotenv').config() // load env variables
 const assert = require('assert')
-const src = '../src/'
 
 
 describe('environment variables', () => {

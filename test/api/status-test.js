@@ -6,7 +6,7 @@ const src = '../../src/api/'
 
 
 describe('api', () => {
-    const statusHandler = require(src + 'status')().status
+    const statusHandler = require(src + 'routes/status')().status
     describe('/status', () => {
         it('responds with 200 OK', () => {
             const req = httpMocks.createRequest(), res = httpMocks.createResponse(), next = sinon.spy()
@@ -18,7 +18,7 @@ describe('api', () => {
         it('sends a message', () => {
             const req = httpMocks.createRequest(), res = httpMocks.createResponse(), next = sinon.spy()
             statusHandler(req, res, next)
-            const resBodyObj = JSON.parse(res._getData());
+            const resBodyObj = JSON.parse(res._getData())
             assert.equal(resBodyObj.message, 'Online', 'Response body message should be "Online".')
             assert.ok(next.notCalled, 'Next should not be called.')
         })

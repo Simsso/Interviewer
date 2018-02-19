@@ -1,6 +1,6 @@
 module.exports = (db, security) => {
     const router = require('express').Router()
-    const routeUtil = require('./route-util')
+    const routeUtil = require('../util/route-util')
     const validate = routeUtil.loadSchemas(['user'])
 
     function users(req, res) {

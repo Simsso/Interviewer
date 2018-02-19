@@ -1,3 +1,7 @@
+/**
+ * API endpoint boilerplate.
+ */
+
 module.exports = (db, security) => {
     const router = require('express').Router()
 

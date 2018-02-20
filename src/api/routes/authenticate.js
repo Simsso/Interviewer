@@ -2,7 +2,7 @@ module.exports = (db, security) => {
     const router = require('express').Router()
     const basicAuth = require('basic-auth')
 
-    function authenticate(req, res) {
+    async function authenticate(req, res) {
         const credentials = basicAuth.parse(req.get('authorization'))
     
         if (typeof credentials === 'undefined') {
@@ -11,7 +11,9 @@ module.exports = (db, security) => {
         
         const userName = credentials.name
     
-        if (!db.validCredentials(userName, credentials.pass)) {
+        const credentialsValid = await db.validCredentials(userName, credentials.pass)
+        delete credentials.pass
+        if (!credentialsValid) {
             // invalid credentials
             return res.status(403).json({ message: 'Invalid credentials' })
         }

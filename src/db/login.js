@@ -1,12 +1,21 @@
-module.exports = (() => {
+module.exports = ((db) => {
+    const security = require('../security')
+
+    function getUser(username) {
+        return db.get('users').find({ username: username }).value()
+    }
+
     /**
-     * @param {string} user Username.
+     * @param {string} username Username.
      * @param {string} password Password.
      * @returns {boolean} True if valid, false otherwise.
      */
-    function validCredentials(user, password) {
-        return user && password
-        // TODO: implement authentication
+    async function validCredentials(username, password) {
+        const user = getUser(username)
+        if (user === null) {
+            return false
+        }
+        return await security.validatePassword(user.password.hash, user.password.salt, user.password.iterations, password)
     }
     
     /**
@@ -22,4 +31,4 @@ module.exports = (() => {
         validCredentials: validCredentials,
         getTokenPayload: getTokenPayload
     }
-})()
+})

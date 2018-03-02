@@ -1,6 +1,7 @@
 require('dotenv').config() // load env variables
 const assert = require('assert')
 const sinon = require('sinon')
+const proxyquire = require('proxyquire')
 const httpMocks = require('node-mocks-http')
 const src = '../src/'
 
@@ -159,6 +160,27 @@ describe('Security', () => {
                 return Promise.reject('Password hashing failed with an exception. ' + e.message)
             }
         })
+
+        it('forwards errors from pbkdf2', async () => {
+            const crypto = require('crypto')
+            const errorObj = {}
+            
+            const pbkdf2Stub = sinon.stub(crypto, 'pbkdf2').callsFake((a, b, c, d, e, callback) => {
+                callback(errorObj)
+            })
+
+            try {
+                const hash = await security.hashPassword('')
+                return Promise.reject('Password validation did not fail despite pbkdf2 throwing an error.')
+            }
+            catch(e) {
+                assert.equal(e, errorObj, 'Should forward error object from bpkdf2.')
+                return Promise.resolve()
+            }
+            finally {
+                pbkdf2Stub.restore()
+            }
+        })
     })
 
     describe('password validation', () => {
@@ -183,6 +205,27 @@ describe('Security', () => {
             }
             catch(e) {
                 return Promise.reject('Password validation failed with an exception. ' + e.message)
+            }
+        })
+
+        it('forwards errors from pbkdf2', async () => {
+            const crypto = require('crypto')
+            const errorObj = {}
+            
+            const pbkdf2Stub = sinon.stub(crypto, 'pbkdf2').callsFake((a, b, c, d, e, callback) => {
+                callback(errorObj)
+            })
+
+            try {
+                const valid = await security.validatePassword('', '', 0, '1234')
+                return Promise.reject('Password validation did not fail despite pbkdf2 throwing an error.')
+            }
+            catch(e) {
+                assert.equal(e, errorObj, 'Should forward error object from bpkdf2.')
+                return Promise.resolve()
+            }
+            finally {
+                pbkdf2Stub.restore()
             }
         })
     })

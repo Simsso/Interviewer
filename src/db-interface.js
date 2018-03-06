@@ -11,10 +11,16 @@ module.exports = (() => {
 
     const login = require('./db/login')(db)
     const signup = require('./db/signup')(db)
+    const interviews = require('./db/interviews')(db)
 
     return {
         validCredentials: login.validCredentials,
         getTokenPayload: login.getTokenPayload,
-        addUser: signup.addUser
+        addUser: signup.addUser,
+
+        getInterviews: interviews.getAll,
+        getInterview: interviews.get,
+        addInterview: interviews.add,
+        deleteInterview: interviews.drop
     }
 })()

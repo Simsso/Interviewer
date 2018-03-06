@@ -29,6 +29,7 @@ module.exports = ((db) => {
 
     return {
         validCredentials: validCredentials,
-        getTokenPayload: getTokenPayload
+        getTokenPayload: getTokenPayload,
+        getUser: getUser
     }
 })

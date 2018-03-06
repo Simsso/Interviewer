@@ -20,7 +20,10 @@ module.exports = (db, security) => {
             res.send(interviews)
         }
         catch(e) {
-            res.status(500).json({ message: 'A database error occurred.', key: messageKeys.DB_ERROR })
+            res.status(500).json({
+                message: 'A database error occurred.',
+                key: messageKeys.DB_ERROR
+            })
         }
     }
 
@@ -40,7 +43,10 @@ module.exports = (db, security) => {
             res.json(interview)
         }
         catch(e) {
-            res.status(500).json({ message: 'A database error occurred.', key: messageKeys.DB_ERROR })
+            res.status(500).json({
+                message: 'A database error occurred.',
+                key: messageKeys.DB_ERROR
+            })
         }
     }
 
@@ -49,7 +55,27 @@ module.exports = (db, security) => {
      * Sends status 201 if successful.
      */
     async function addInterview(req, res) {
-        throw new Error('Not implemented')
+        const userId = req.user.id
+        const interview = req.body
+        const valid = validate['interview'](interview)
+        if (!valid) {
+            const errors = validate['interview'].errors
+            return res.status(400).json({
+                message: 'Invalid interview object passed',
+                key: messageKeys.SCHEMA_VALIDATION_ERROR,
+                errors: errors
+            })
+        }
+        try {
+            const createdInterview = await db.addInterview(userId, interview)
+            return res.status(201).json(createdInterview)
+        }
+        catch(e) {
+            return res.status(500).json({
+                message: 'Interview could not be added to the database because of a datbase error',
+                key: messageKeys.DB_ERROR
+            })
+        }
     }
 
     /**
@@ -59,13 +85,35 @@ module.exports = (db, security) => {
      * Sends status 204 if successful.
      */
     async function deleteInterview(req, res) {
-        throw new Error('Not implemented')
+        const userId = req.user.id
+        const interviewId = req.params.interviewId
+        try {
+            const deleted = await db.deleteInterview(userId, interviewId)
+            if (deleted) {
+                return res.status(204).send()
+            }
+            return res.status(404).send()
+        }
+        catch(e) {
+            res.status(500).json({
+                message: 'A database error occurred.',
+                key: messageKeys.DB_ERROR
+            })
+        }
+    }
+
+    /**
+     * Update an existing interview.
+     */
+    async function updateInterview(req, res) {
+        res.status(501).send() // not implemented
     }
 
     router.get('/interviews', security.authMiddleware(), getInterviews)
-    router.get('/interviews/:interviewId', security.authMiddleware(), getInterview)
     router.post('/interviews', security.authMiddleware(), addInterview)
-    router.delete('/interviews', security.authMiddleware(), deleteInterview)
+    router.get('/interviews/:interviewId', security.authMiddleware(), getInterview)
+    router.put('/interviews/:interviewId', security.authMiddleware(), updateInterview)
+    router.delete('/interviews/:interviewId', security.authMiddleware(), deleteInterview)
 
     return {
         router: router,

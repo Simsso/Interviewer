@@ -17,10 +17,15 @@ module.exports = ((db) => {
         throw new Error('Not implemented')
     }
 
+    async function update(userId, interview) {
+        throw new Error('Not implemented')
+    }
+
     return {
         getAll: getAll,
         get: get,
         add: add,
-        drop: drop
+        drop: drop,
+        update: update
     }
 })

@@ -21,6 +21,7 @@ module.exports = (() => {
         getInterviews: interviews.getAll,
         getInterview: interviews.get,
         addInterview: interviews.add,
-        deleteInterview: interviews.drop
+        deleteInterview: interviews.drop,
+        updateInterview: interviews.update
     }
 })()

@@ -3,6 +3,7 @@ const assert = require('assert')
 const sinon = require('sinon')
 const httpMocks = require('node-mocks-http')
 const src = '../../src/api/'
+const messageKeys = require(src + 'util/message-keys')
 
 
 describe('Users API', () => {
@@ -19,7 +20,8 @@ describe('Users API', () => {
             await usersHandler(req, res)
 
             assert.equal(res._getStatusCode(), 400, 'Should not accept an empty object as request payload.')
-            assert.equal(JSON.parse(res._getData()).message, 'Invalid user object passed', 'Should send a descriptive error message.')
+            assert.equal(typeof JSON.parse(res._getData()).message, 'string', 'Should send an error message.')
+            assert.equal(JSON.parse(res._getData()).key, messageKeys.SCHEMA_VALIDATION_ERROR, 'Should send the schema validation error key.')
             assert.ok(validateMock.user.calledOnce, 'Validation schema should be used.')
         })
 
@@ -63,9 +65,14 @@ describe('Users API', () => {
 
             assert.equal(res._getStatusCode(), 500, 'Should respond with status code 500.')
             assert.equal(
-                JSON.parse(res._getData()).message, 
-                'User could not be added to the database because of an internal error',
+                typeof JSON.parse(res._getData()).message, 
+                'string',
                 'Should send a descriptive error message.'
+            )
+            assert.equal(
+                JSON.parse(res._getData()).key,
+                messageKeys.DB_ERROR,
+                'Should send the DB_ERROR status key.'
             )
             assert.ok(dbMock.addUser.calledOnce, 'Should try to add the new user object.')
         })

@@ -12,7 +12,7 @@ module.exports = ((db) => {
      */
     async function validCredentials(username, password) {
         const user = getUser(username)
-        if (user === null) {
+        if (typeof user === 'undefined' || user === null) {
             return false
         }
         return await security.validatePassword(user.password.hash, user.password.salt, user.password.iterations, password)
@@ -23,8 +23,7 @@ module.exports = ((db) => {
      * @returns {object} Token payload
      */
     function getTokenPayload(user) {
-        return { user: user }
-        // TODO: read relevant information from db
+        return getUser(user)
     }
 
     return {

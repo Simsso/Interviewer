@@ -2,19 +2,39 @@ module.exports = ((db) => {
     const security = require('../security')
 
     async function getAll(userId) {
-        throw new Error('Not implemented')
+        let userInterviews = db.get('interviews')
+            .filter({ userId: userId })
+            .value()
+        if (!Array.isArray(userInterviews)) {
+            return []
+        }
+        return userInterviews
     }
 
     async function get(userId, interviewId) {
-        throw new Error('Not implemented')
+        const interview = db.get('interviews')
+            .find({ userId: userId, id: interviewId })
+            .value()
+        if (typeof interview !== 'object') {
+            return null
+        }
+        return interview
     }
 
     async function add(userId, interview) {
-        throw new Error('Not implemented')
+        interview.userId = userId
+        interview.id = security.uuid()
+        db.get('interviews')
+            .push(interview)
+            .write()
+        return interview
     }
 
     async function drop(userId, interviewId) {
-        throw new Error('Not implemented')
+        const deleted = db.get('interviews')
+            .remove({ userId: userId, id: interviewId })
+            .write()
+        return deleted.length !== 0
     }
 
     async function update(userId, interview) {

@@ -11,13 +11,13 @@ module.exports = (db, security) => {
 
     /**
      * Get all interviews of a user.
-     * If now interviews are found, an empty array is being returned.
+     * If no interviews are found, an empty array is being returned.
      */
     async function getInterviews(req, res) {
         const userId = req.user.data.id
         try {
             const interviews = await db.getInterviews(userId)
-            if (interviews === null || !Array.isArray(interviews)) {
+            if (interviews === null) {
                 return res.status(404).json({
                     message: 'The passed user id ("' + userId + '") was not found in the database',
                     key: messageKeys.INVALID_USER_ID
@@ -27,7 +27,7 @@ module.exports = (db, security) => {
         }
         catch(e) {
             return res.status(500).json({
-                message: 'A database error occurred.',
+                message: 'A database error occurred',
                 key: messageKeys.DB_ERROR
             })
         }
@@ -43,14 +43,14 @@ module.exports = (db, security) => {
         const interviewId = req.params.interviewId
         try {
             const interview = await db.getInterview(userId, interviewId)
-            if (interview === null || typeof interview !== 'object') {
+            if (interview === null) {
                 return res.status(404).send()
             }
-            res.json(interview)
+            return res.json(interview)
         }
         catch(e) {
-            res.status(500).json({
-                message: 'A database error occurred.',
+            return res.status(500).json({
+                message: 'A database error occurred',
                 key: messageKeys.DB_ERROR
             })
         }
@@ -101,8 +101,8 @@ module.exports = (db, security) => {
             return res.status(404).send()
         }
         catch(e) {
-            res.status(500).json({
-                message: 'A database error occurred.',
+            return res.status(500).json({
+                message: 'A database error occurred',
                 key: messageKeys.DB_ERROR
             })
         }

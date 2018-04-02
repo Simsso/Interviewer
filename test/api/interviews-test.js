@@ -23,19 +23,31 @@ describe('Interviews API', () => {
             const interviews = [{ interview: 123 }]
             const dbMock = { getInterviews: sinon.stub().returns(interviews)}
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             await getGetRoute(dbMock)(req, res)
 
             assert.equal(res._getStatusCode(), 200, 'Status code should be 200.')
             assert.equal(interviews, res._getData(), 'Should forward the data from the db.')
             assert.ok(dbMock.getInterviews.calledOnce, 'DB should be called exactly once.')
-            assert.ok(dbMock.getInterviews.calledWithExactly(req.user.id), 'Should call the DB interface with the user ID which is stored in the request object.')
+            assert.ok(dbMock.getInterviews.calledWithExactly(req.user.data.id), 'Should call the DB interface with the user ID which is stored in the request object.')
+        })
+
+        it('responds with 404 if the DB returns null', async () => {
+            const dbMock = { getInterviews: sinon.stub().returns(null)}
+            const req = httpMocks.createRequest(), res = httpMocks.createResponse()
+            req.user = { data: { id: '1523' } }
+            await getGetRoute(dbMock)(req, res)
+            const resObj = JSON.parse(res._getData())
+
+            assert.equal(res._getStatusCode(), 404, 'Should respond with 404 status code if the DB returns null')
+            assert.equal(resObj.key, messageKeys.INVALID_USER_ID, 'Should send the INVALID_USER_ID error key')
+            assert.ok(resObj.message, 'Should send a descriptive error message')
         })
 
         it('responds with 500 if the DB throws an error', async () => {
             const dbMock = { getInterviews: sinon.stub().throws(new Error('Mock error: DB not available'))}
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             await getGetRoute(dbMock)(req, res)
             const resObj = JSON.parse(res._getData())
 
@@ -64,20 +76,20 @@ describe('Interviews API', () => {
             const dbMock = { getInterview: sinon.stub().returns(interview)}
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
             req._setParameter('interviewId', interview.id)
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             await getGetRoute(dbMock)(req, res)
 
             assert.equal(res._getStatusCode(), 200, 'Status code should be 200.')
             assert.deepEqual(interview, JSON.parse(res._getData()), 'Should forward the data from the db.')
             assert.ok(dbMock.getInterview.calledOnce, 'DB should be called exactly once.')
-            assert.ok(dbMock.getInterview.calledWithExactly(req.user.id, interview.id), 'DB should be called with user id and interview id.')
+            assert.ok(dbMock.getInterview.calledWithExactly(req.user.data.id, interview.id), 'DB should be called with user id and interview id.')
         })
 
         it('responds with 404 if the DB returns null', async () => {
             const dbMock = { getInterview: sinon.stub().returns(null)}
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
             req._setParameter('interviewId', interview.id)
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             await getGetRoute(dbMock)(req, res)
 
             assert.equal(res._getStatusCode(), 404, 'Should respond with 404 status code if the DB returns null')
@@ -88,7 +100,7 @@ describe('Interviews API', () => {
             const dbMock = { getInterview: sinon.stub().throws(new Error('Mock error: DB not available'))}
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
             req._setParameter('interviewId', interview.id)
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             await getGetRoute(dbMock)(req, res)
             const resObj = JSON.parse(res._getData())
 
@@ -122,7 +134,7 @@ describe('Interviews API', () => {
             const dbMock = { addInterview: sinon.stub().returns(validInterviewWithId) }
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
             req._setBody({ invalid: 'payload' })
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             getAddRoute(dbMock)(req, res)
             const resBody = JSON.parse(res._getData())
 
@@ -137,20 +149,20 @@ describe('Interviews API', () => {
             const dbMock = { addInterview: sinon.stub().returns(validInterviewWithId) }
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
             req._setBody(validInterview)
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             await getAddRoute(dbMock)(req, res)
 
             assert.equal(res._getStatusCode(), 201, 'Should respond with created status code.')
             assert.deepEqual(JSON.parse(res._getData()), validInterviewWithId, 'Should respond with the object that was returned by the DB interface.')
             assert.ok(dbMock.addInterview.calledOnce, 'Should call the add interface exactly once.')
-            assert.ok(dbMock.addInterview.calledWithExactly(req.user.id, validInterview), 'Add interview DB interface should be called with the request payload and user ID.')
+            assert.ok(dbMock.addInterview.calledWithExactly(req.user.data.id, validInterview), 'Add interview DB interface should be called with the request payload and user ID.')
         })
 
         it('handles DB errors', async () => {
             const dbMock = { addInterview: sinon.stub().throws('Mock error: DB not available') }
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
             req._setBody(validInterview)
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             getAddRoute(dbMock)(req, res)
             const resBody = JSON.parse(res._getData())
 
@@ -171,20 +183,20 @@ describe('Interviews API', () => {
         it('responds with 204 if interviewId is valid', async () => {
             const dbMock = { deleteInterview: sinon.stub().returns(true) }
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             req._setParameter('interviewId', mockInterviewId)
             await getDeleteRoute(dbMock)(req, res)
 
             assert.equal(res._getStatusCode(), 204, 'Should respond with 204 status code.')
             assert.equal(res._getData(), '', 'Should send an empty response.')
             assert.ok(dbMock.deleteInterview.called, 'Should call the DB delete interface.')
-            assert.ok(dbMock.deleteInterview.calledWith(req.user.id, mockInterviewId), 'Should call DB interface with user ID and interview ID.')
+            assert.ok(dbMock.deleteInterview.calledWith(req.user.data.id, mockInterviewId), 'Should call DB interface with user ID and interview ID.')
         })
 
         it('responds with 404 if the interviewId is invalid', async () => {
             const dbMock = { deleteInterview: sinon.stub().returns(false) } // return false indicates invalid ID
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             req._setParameter('interviewId', mockInterviewId)
             await getDeleteRoute(dbMock)(req, res)
 
@@ -195,7 +207,7 @@ describe('Interviews API', () => {
         it('responds with 500 if the DB throws an error', async () => {
             const dbMock = { deleteInterview: sinon.stub().throws(new Error('Mock error: DB not available')) }
             const req = httpMocks.createRequest(), res = httpMocks.createResponse()
-            req.user = { id: '1523' }
+            req.user = { data: { id: '1523' } }
             req._setParameter('interviewId', mockInterviewId)
             await getDeleteRoute(dbMock)(req, res)
             const resObj = JSON.parse(res._getData())

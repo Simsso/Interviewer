@@ -1,8 +1,18 @@
 module.exports = ((db) => {
     const security = require('../security')
 
+    /**
+     * Searches for a user based on a given username.
+     * 
+     * @param {string} username to find the user by.
+     * @returns {object} user or null if the user could not be found.
+     */
     function getUser(username) {
-        return db.get('users').find({ username: username }).value()
+        let foundUserObject = db.get('users').find({ username: username }).value()
+        if (typeof foundUserObject !== 'object') {
+            foundUserObject = null // null indicates not found
+        }
+        return foundUserObject // null or object
     }
 
     /**
@@ -12,7 +22,7 @@ module.exports = ((db) => {
      */
     async function validCredentials(username, password) {
         const user = getUser(username)
-        if (typeof user === 'undefined' || user === null) {
+        if (user === null) {
             return false
         }
         return await security.validatePassword(user.password.hash, user.password.salt, user.password.iterations, password)

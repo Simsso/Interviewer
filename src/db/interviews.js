@@ -31,10 +31,10 @@ module.exports = ((db) => {
     }
 
     async function drop(userId, interviewId) {
-        const deleted = db.get('interviews')
+        const deletedEntries = db.get('interviews')
             .remove({ userId: userId, id: interviewId })
             .write()
-        return deleted.length !== 0
+        return deletedEntries.length !== 0
     }
 
     async function update(userId, interview) {

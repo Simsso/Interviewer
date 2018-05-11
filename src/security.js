@@ -10,7 +10,7 @@ const hashlen = parseInt(process.env['HASH_LENGTH'], 10),
     saltlen = parseInt(process.env['SALT_LENGTH'], 10)
 
 function getValidationFunctions() {
-    return routeUtil.loadSchemas(['user'])
+    return routeUtil.loadSchemas(['user', 'interview'])
 }
 
 /**

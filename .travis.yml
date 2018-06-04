@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+ - "node"
+install:
+ - npm i
+before_script:
+ - cp env.sample .env
+script:
+ - npm test

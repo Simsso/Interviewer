@@ -1,0 +1,33 @@
+{
+    "title": "Interview",
+    "type": "object",
+    "description": "An interview.",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Interview name"
+        },
+        "questions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "question": {
+                        "type": "string"
+                    }
+                },
+                "required": ["question"]
+            }
+        },
+        "weekday": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6,
+            "description": "Weekday starting with Sunday."
+        }
+    },
+    "required": ["weekday", "questions"]
+}
